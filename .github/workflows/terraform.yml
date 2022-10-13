@@ -16,10 +16,13 @@ jobs:
           terraform_version: 1.0.0
 
       - name: Terraform Init
+        working-directory: ./ci-cd
         run: terraform init -backend=false
 
       - name: Terraform Validate
+        working-directory: ./ci-cd
         run: terraform validate
 
       - name: Terraform fmt
+        working-directory: ./ci-cd
         run: terraform fmt -check
