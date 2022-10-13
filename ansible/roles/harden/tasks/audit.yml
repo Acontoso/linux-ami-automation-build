@@ -1,0 +1,18 @@
+---
+- name: "Enable Sudo Monitoring"
+  lineinfile:
+    state: present
+    path: /etc/sudoers
+    line: Defaults syslog=local2
+
+- name: Enable service ssm_service_script
+  systemd:
+    name: ssm_service_script
+    enabled: yes
+    masked: no
+
+- name: Enable service defender_service_script
+  systemd:
+    name: defender_install
+    enabled: yes
+    masked: no

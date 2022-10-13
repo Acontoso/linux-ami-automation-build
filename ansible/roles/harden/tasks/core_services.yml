@@ -1,0 +1,191 @@
+---
+- name: Turn off auto upgrade
+  when: ansible_os_family == "Debian"
+  lineinfile:
+    dest: /etc/apt/apt.conf.d/10periodic
+    regexp: "^APT::Periodic::Unattended-Upgrade "
+    line: 'APT::Periodic::Unattended-Upgrade "0";'
+
+- name: Ensure minimum days between password changes is 7 or more 5.4.1.2
+  lineinfile:
+    regexp: '^PASS_MIN_DAYS'
+    state: present
+    path: /etc/login.defs
+    line: PASS_MIN_DAYS 30
+
+- name: Ensure password expiration is 365 days or less
+  lineinfile:
+    regexp: '^PASS_MAX_DAYS'
+    state: present
+    path: /etc/login.defs
+    line: PASS_MAX_DAYS 364
+
+- name: Verify all users with a password have password inactive no more than 30 days after password expires 5.4.1.4
+  command: useradd -D -f 30
+
+- name: Ensure default user umask is 027 or more restrictive 5.4.4
+  lineinfile:
+    regexp: '^UMASK'
+    state: present
+    path: /etc/login.defs
+    line: UMASK 027
+
+- name: Ensure default user umask is 027 or more restrictive 5.4.4 Add file in /etc/profile.d
+  lineinfile:
+    create: yes
+    state: absent
+    path: /etc/profile.d/umask.sh
+    line: UMASK 027
+
+- name: 5.1.x Ensure permissions on cron are configured
+  command: chmod og-rwx /etc/'{{ item }}' 
+  loop:
+    - crontab
+    - cron.hourly
+    - cron.daily
+    - cron.weekly
+    - cron.monthly
+    - cron.d
+
+- name: 1.5.3 Ensure address space layout randomization (ASLR) is enabled
+  sysctl:
+    name: kernel.randomize_va_space
+    value: 2
+    state: present
+    sysctl_set: yes
+    ignoreerrors: yes
+
+- name: 2.2.16 Ensure rsync service is not enabled
+  when: ansible_os_family == "Debian"
+  systemd:
+    name: rsync
+    state: stopped
+
+- name: Turn off auto update package lists
+  lineinfile:
+    dest: /etc/apt/apt.conf.d/10periodic
+    regexp: "^APT::Periodic::Update-Package-Lists "
+    line: 'APT::Periodic::Update-Package-Lists "0";'
+
+- name: 5.2.2 Ensure SSH Protocol is set to 2
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: "^Protocol "
+    line: "Protocol 2"
+  notify: reload sshd
+
+- name: 5.2.3 Ensure SSH LogLevel is set to INFO
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: "^LogLevel "
+    line: "LogLevel INFO"
+  notify: reload sshd
+
+- name: 5.2.4 Ensure SSH X11 forwarding is disabled
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: "^X11Forwarding "
+    line: "X11Forwarding no"
+  notify: reload sshd
+
+- name: 5.2.5 Ensure SSH MaxAuthTries is set to 4 or less
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: "^MaxAuthTries "
+    line: "MaxAuthTries 4"
+  notify: reload sshd
+
+- name: 5.2.6 Ensure SSH IgnoreRhosts is enabled
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: "^IgnoreRhosts "
+    line: "IgnoreRhosts yes"
+  notify: reload sshd
+
+- name: 5.2.7 Ensure SSH HostbasedAuthentication is disabled
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: "^HostbasedAuthentication "
+    line: "HostbasedAuthentication no"
+  notify: reload sshd
+
+- name: 5.2.8 Ensure SSH root login is disabled
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: "^PermitRootLogin "
+    line: "PermitRootLogin no"
+  notify: reload sshd
+
+- name: 5.2.9 Ensure SSH PermitEmptyPasswords is disabled
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: "^PermitEmptyPasswords "
+    line: "PermitEmptyPasswords no"
+  notify: reload sshd
+
+- name: 5.2.10 Ensure SSH PermitUserEnvironment is disabled
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: "^PermitUserEnvironment "
+    line: "PermitUserEnvironment no"
+  notify: reload sshd
+
+- name: 5.2.12 Ensure SSH Idle Timeout Interval is configured
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: "^ClientAliveInterval "
+    line: "ClientAliveInterval 300"
+  notify: reload sshd
+
+- name: 5.2.12 Ensure SSH Idle Timeout Interval is configured
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: "^ClientAliveCountMax "
+    line: "ClientAliveCountMax 300"
+  notify: reload sshd
+
+- name: 5.2.13 Ensure SSH LoginGraceTime is set to one minute or less
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: "^LoginGraceTime "
+    line: "LoginGraceTime 60"
+  notify: reload sshd
+
+- name: 5.2.14 Ensure SSH access is limited
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: "^AllowGroups "
+    line: "AllowGroups {{ ssh_allow_groups }}"
+  when: ssh_allow_groups is defined
+  notify: reload sshd
+
+- name: 5.2.14 Ensure SSH access is limited
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: "^AllowUsers "
+    line: "AllowUsers {{ ssh_allow_users }}"
+  when: ssh_allow_users is defined
+  notify: reload sshd
+
+- name: 5.2.14 Ensure SSH access is limited
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: "^DenyGroups "
+    line: "DenyGroups {{ ssh_deny_groups }}"
+  when: ssh_deny_groups is defined
+  notify: reload sshd
+
+- name: 5.2.14 Ensure SSH access is limited
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: "^DenyUsers "
+    line: "DenyUsers {{ ssh_deny_users }}"
+  when: ssh_deny_users is defined
+  notify: reload sshd
+
+- name: 5.2.15 Ensure SSH warning banner is configured
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: "^Banner "
+    line: "Banner /etc/issue.net"
+  notify: reload sshd

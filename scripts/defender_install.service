@@ -1,0 +1,10 @@
+[Unit]
+Description=Install Defender for endpoint EDR via SystemD
+After=multi-user.target
+
+[Service]
+Type=simple
+ExecStart=/usr/local/sbin/defender_service_script.sh
+
+[Install]
+WantedBy=multi-user.target

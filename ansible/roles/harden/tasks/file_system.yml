@@ -1,0 +1,38 @@
+---
+- name: Remove executable flag from fstab on /deb/shm partition 1.1.16
+  mount:
+    path: /deb/shm
+    opts: noexec
+    state: mounted
+    src: shm
+    fstype: tmpfs
+
+- name: 1.1.16 Ensure noexec option set on /dev/shm partition
+  command: mount -o remount,noexec /dev/shm
+
+- name: Remove unneeded filesystem types
+  lineinfile:
+    create: yes
+    path: /etc/modprobe.d/{{ item }}.conf
+    state: present
+    line: install {{ item }} /bin/true
+  loop:
+    - cramfs
+    - freevxfs
+    - jffs2
+    - hfs
+    - hfsplus
+    - squashfs
+    - udf
+    - FAT
+
+- name: 1.4.1 Ensure permissions on bootloader config are configured Ubuntu
+  when: ansible_os_family == "Debian"
+  command: chmod og-rwx /etc/default/grub
+
+- name: 5.3.3 Ensure password reuse is limited
+  when: ansible_os_family == "Debian"
+  lineinfile:
+    state: present
+    path: /etc/pam.d/common-password
+    line: password required pam_pwhistory.so remember=5

@@ -1,0 +1,16 @@
+---
+- name: "[Networking] Activities Include"
+  include_tasks:
+    file: network.yml
+
+- name: "[Audit and Logging] Activities Include"
+  include_tasks:
+    file: audit_logging.yml
+
+- name: "[Core Service Configuration] Activities Include"
+  include_tasks:
+    file: core_services.yml
+
+- name: "[FileSystem Configuration] Activities Include"
+  include_tasks:
+    file: file_system.yml

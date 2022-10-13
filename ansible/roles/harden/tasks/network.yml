@@ -1,0 +1,157 @@
+---
+- name: 3.1.1 Ensure IP forwarding is disabled
+  sysctl:
+    name: net.ipv4.ip_forward
+    value: 0
+    state: present
+    sysctl_set: yes
+    ignoreerrors: yes
+
+- name: 3.1.1 Ensure IP forwarding is disabled (flush existing routes)
+  sysctl:
+    name: net.ipv4.route.flush
+    value: 1
+    state: present
+    sysctl_set: yes
+    ignoreerrors: yes
+
+- name: 3.1.2 Ensure packet redirect sending is disabled (all)
+  sysctl:
+    name: net.ipv4.conf.all.send_redirects
+    value: 0
+    state: present
+    sysctl_set: yes
+    ignoreerrors: yes
+
+- name: 3.1.2 Ensure packet redirect sending is disabled (default)
+  sysctl:
+    name: net.ipv4.conf.default.send_redirects
+    value: 0
+    state: present
+    sysctl_set: yes
+    ignoreerrors: yes
+
+- name: 3.2.1 Ensure source routed packets are not accepted
+  sysctl:
+    name: net.ipv4.conf.all.accept_source_route
+    value: 0
+    state: present
+    sysctl_set: yes
+    ignoreerrors: yes
+
+- name: 3.1.2 Ensure packet redirect sending is disabled (all)
+  sysctl:
+    name: net.ipv4.conf.default.accept_source_route
+    value: 0
+    state: present
+    sysctl_set: yes
+    ignoreerrors: yes
+
+- name: 3.2.2 Ensure ICMP redirects are not accepted
+  sysctl:
+    name: net.ipv4.conf.default.accept_redirects
+    value: 0
+    state: present
+    sysctl_set: yes
+    ignoreerrors: yes
+
+- name: 3.2.2 Ensure ICMP redirects are not accepted (all)
+  sysctl:
+    name: net.ipv4.conf.all.accept_redirects
+    value: 0
+    state: present
+    sysctl_set: yes
+    ignoreerrors: yes
+
+- name: 3.2.3 Ensure secure ICMP redirects are not accepted
+  sysctl:
+    name: net.ipv4.conf.default.secure_redirects
+    value: 0
+    state: present
+    sysctl_set: yes
+    ignoreerrors: yes
+
+- name: 3.2.3 Ensure secure ICMP redirects are not accepted (all)
+  sysctl:
+    name: net.ipv4.conf.all.secure_redirects
+    value: 0
+    state: present
+    sysctl_set: yes
+    ignoreerrors: yes
+
+- name: 3.2.4 Ensure suspicious packets are logged
+  sysctl:
+    name: net.ipv4.conf.default.log_martians
+    value: 1
+    state: present
+    sysctl_set: yes
+    ignoreerrors: yes
+
+- name: 3.2.4 Ensure suspicious packets are logged (all)
+  sysctl:
+    name: net.ipv4.conf.all.log_martians
+    value: 1
+    state: present
+    sysctl_set: yes
+    ignoreerrors: yes
+
+- name: 3.2.5 Ensure broadcast ICMP requests are ignored
+  sysctl:
+    name: net.ipv4.icmp_echo_ignore_broadcasts
+    value: 1
+    state: present
+    sysctl_set: yes
+    ignoreerrors: yes
+
+- name: 3.2.6 Ensure bogus ICMP responses are ignored
+  sysctl:
+    name: net.ipv4.icmp_ignore_bogus_error_responses
+    value: 1
+    state: present
+    sysctl_set: yes
+    ignoreerrors: yes
+
+- name: 3.3.1 Ensure IPv6 router advertisements are not accepted
+  sysctl:
+    name: net.ipv6.conf.default.accept_ra
+    value: 0
+    state: present
+    sysctl_set: yes
+    ignoreerrors: yes
+
+- name: 3.3.1 Ensure IPv6 router advertisements are not accepted (all)
+  sysctl:
+    name: net.ipv6.conf.all.accept_ra
+    value: 0
+    state: present
+    sysctl_set: yes
+    ignoreerrors: yes
+
+- name: 3.3.2 Ensure IPv6 redirects are not accepted
+  sysctl:
+    name: net.ipv6.conf.default.accept_redirects
+    value: 0
+    state: present
+    sysctl_set: yes
+    ignoreerrors: yes
+
+- name: 3.3.2 Ensure IPv6 redirects are not accepted (all)
+  sysctl:
+    name: net.ipv6.conf.all.accept_redirects
+    value: 0
+    state: present
+    sysctl_set: yes
+    ignoreerrors: yes
+
+- name: 3.5.1 Ensure DCCP is disabled Debian
+  when: ansible_os_family == "Debian"
+  lineinfile:
+    create: yes
+    path: /etc/modprobe.d/{{ item }}.conf
+    state: present
+    line: install {{ item }} /bin/true
+  loop:
+    - dccp
+    - sctp
+    - rds
+    - tipc

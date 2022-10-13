@@ -1,0 +1,8 @@
+---
+  # Called as part of the Packer build.
+   - hosts: localhost
+     connection: local
+     gather_facts: true
+     become: yes
+     roles:
+        - harden
