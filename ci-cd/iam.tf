@@ -1,12 +1,12 @@
 resource "aws_iam_policy" "codebuild_iam_policy" {
   name   = "soe_build_policy"
-  policy = data.aws_iam_policy_document.codebuild_policy_statement_ms_sec.json
+  policy = data.aws_iam_policy_document.codebuild_policy_document_statement.json
   tags   = local.tags
 }
 
 resource "aws_iam_role" "codebuild_role" {
   name               = var.iam_role_name_codebuild
-  assume_role_policy = data.aws_iam_policy_document.policy_document_codebuild.json
+  assume_role_policy = data.aws_iam_policy_document.trust_policy_document_codebuild.json
   tags               = local.tags
 }
 

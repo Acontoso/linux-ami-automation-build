@@ -7,6 +7,7 @@ inputs = {
     version_no                                  = "1.0.0"
     github_repo_url                             = run_cmd("../get_repo_url.sh")
     iam_role_name_codebuild                     = "soe-build"
+    buildspec_path                              = "../buildspec/buildspec.yml"
 }
 
 remote_state {

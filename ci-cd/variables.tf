@@ -8,6 +8,11 @@ variable "codebuild_project_description" {
   description = "Description for codebuild project being created"
 }
 
+variable "buildspec_path" {
+  type        = string
+  description = "Location of buildspec file within source code repository"
+}
+
 variable "environment" {
   type        = string
   description = "Environment where you're deploying resources for this project"
