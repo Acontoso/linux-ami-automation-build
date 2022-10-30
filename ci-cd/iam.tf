@@ -73,10 +73,55 @@ data "aws_iam_policy_document" "codebuild_policy_document_statement" {
       "ec2:RegisterImage",
       "ec2:RunInstances",
       "ec2:StopInstances",
-      "ec2:TerminateInstances"
+      "ec2:TerminateInstances",
+      "ec2:RunInstances",
+      "ec2:StopInstances",
+      "ec2:TerminateInstances",
+      "ec2:AssociateInstanceProfileAssociation",
+      "ec2:ReplaceIamInstanceProfileAssociaton",
+      "ec2:DescribeVpcs",
+      "ec2:DescribeSecurityGroups",
+      "ec2:DescribeSubnets",
+      "ec2:DeleteNetworkInterfaces",
+      "ec2:CreateNetworkInterface",
+      "ec2:DescribeDhcpOptions",
+      "ec2:DescribeNetworkInterfaces",
+      "ec2:EnableImageDeprecation",
+      "ec2:DisableImageDeprecation"
     ]
     resources = [
-      "arn:aws:ec2:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:*"
+      "*"
+    ]
+  }
+  statement {
+    sid    = "AllowCWLogs"
+    effect = "Allow"
+    actions = [
+      "logs:CreateLogGroup",
+      "logs:CreateLogStream",
+      "logs:PutLogEvents",
+      "logs:DescribeLogStreams",
+      "logs:PutRetentionPolicy",
+      "logs:ListTagsLogGroup",
+      "logs:DeleteLogGroup"
+    ]
+    resources = [
+      "arn:aws:logs:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:log-group:/aws/codebuild/${aws_codebuild_project.codebuild_job.name}:*",
+      "arn:aws:logs:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:log-group:/aws/codebuild/${aws_codebuild_project.codebuild_job.name}"
+    ]
+  }
+  statement {
+    sid    = "AllowInstanceProfile"
+    effect = "Allow"
+    actions = [
+      "iam:GetInstanceProfile",
+      "iam:AddRoleToInstanceProfile",
+      "iam:RemoveRoleFromInstanceProfile",
+      "iam:GetRole",
+      "iam:PassRole"
+    ]
+    resources = [
+      "*"
     ]
   }
 }

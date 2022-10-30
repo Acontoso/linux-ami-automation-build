@@ -7,7 +7,7 @@
 
 - name: Enable service ssm_service_script
   systemd:
-    name: ssm_service_script
+    name: ssm_install
     enabled: yes
     masked: no
 

@@ -5,7 +5,7 @@
 
 - name: "[Audit and Logging] Activities Include"
   include_tasks:
-    file: audit_logging.yml
+    file: audit.yml
 
 - name: "[Core Service Configuration] Activities Include"
   include_tasks:

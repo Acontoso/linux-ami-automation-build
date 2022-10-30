@@ -1,0 +1,30 @@
+{
+    "antivirusEngine":{
+       "enforcementLevel":"passive",
+       "scanAfterDefinitionUpdate":false,
+       "scanArchives":true,
+       "maximumOnDemandScanThreads":2,
+       "exclusionsMergePolicy":"merge",
+       "disallowedThreatActions":[
+          "allow",
+          "restore"
+       ],
+       "threatTypeSettingsMergePolicy":"merge",
+       "threatTypeSettings":[
+          {
+             "key":"potentially_unwanted_application",
+             "value":"audit"
+          },
+          {
+             "key":"archive_bomb",
+             "value":"audit"
+          }
+       ]
+    },
+    "cloudService":{
+       "enabled":false,
+       "diagnosticLevel":"required",
+       "automaticSampleSubmissionConsent":"safe",
+       "automaticDefinitionUpdateEnabled":true
+    }
+}

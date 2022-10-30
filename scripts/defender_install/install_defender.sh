@@ -48,3 +48,4 @@ rm WindowsDefenderATPOnboardingPackage.zip
 python3 MicrosoftDefenderATPOnboardingLinuxServer.py
 wait $!
 rm MicrosoftDefenderATPOnboardingLinuxServer.py
+mv mdatp_managed.json /etc/opt/microsoft/mdatp/managed/.

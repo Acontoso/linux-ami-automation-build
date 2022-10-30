@@ -25,9 +25,8 @@ resource "aws_codebuild_project" "codebuild_job" {
 
   }
   source {
-    buildspec           = var.buildspec_path
     report_build_status = true
-    location            = var.github_repo_url
+    location            = var.github_repo_url_https
     type                = "GITHUB"
   }
 
@@ -39,7 +38,7 @@ resource "aws_codebuild_project" "codebuild_job" {
 resource "aws_codebuild_source_credential" "codebuild_credentials_github" {
   auth_type   = "PERSONAL_ACCESS_TOKEN"
   server_type = "GITHUB"
-  token       = local.secrets.github_api_token
+  token       = local.secrets.api_key
 }
 
 resource "aws_codebuild_webhook" "codebuild_trigger" {

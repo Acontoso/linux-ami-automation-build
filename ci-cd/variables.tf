@@ -23,22 +23,17 @@ variable "github_repo_url" {
   description = "Name of repository where code resides"
 }
 
-variable "branch_to_monitor" {
-  type        = string
-  description = "Branch Codepipeline will monitor"
-}
-
 variable "iam_role_name_codebuild" {
   type        = string
   description = "Name of role for codebuild iam role"
 }
 
-variable "iam_role_name_codepipeline" {
-  type        = string
-  description = "Name of role for codepipeline iam role"
-}
-
 variable "version_no" {
   type        = string
   description = "Version of pipeline and builds"
+}
+
+variable "github_repo_url_https" {
+  type        = string
+  description = "Name of repository where code resides, but HTTPS endpoint for API calls"
 }
