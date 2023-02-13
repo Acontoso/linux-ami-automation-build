@@ -4,8 +4,9 @@ locals {
 }
 
 source "amazon-ebs" "ubuntu_20_04" {
-  ami_name = "${var.ami_name}-${var.build_tag_number}"
-  region   = var.region
+  ami_name               = "${var.ami_name}-${var.build_tag_number}"
+  ami_orgs_arns          = var.aws_org_id
+  region                 = var.region
   skip_region_validation = true
   source_ami_filter {
     filters = {
@@ -22,6 +23,7 @@ source "amazon-ebs" "ubuntu_20_04" {
   temporary_security_group_source_cidrs = var.codebuild_cidr_block
   deprecate_at                          = local.deprecate_time
   iam_instance_profile                  = "packer_instance_profile"
+  encrypt_boot                          = true
 }
 
 build {
@@ -48,8 +50,16 @@ build {
       "ansible/roles/harden"
     ]
   }
-  
+
   provisioner "shell" {
     inline = ["sudo bash /tmp/crowdstrike_install/install_crowdstrike.sh"]
+  }
+
+  provisioner "shell" {
+    inline = ["sudo bash /tmp/qualys_install/install_qualys.sh"]
+  }
+
+  provisioner "shell" {
+    inline = ["sudo bash /tmp/install_docker.sh"]
   }
 }

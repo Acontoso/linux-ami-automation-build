@@ -27,3 +27,9 @@ variable "build_tag_number" {
   description = "Codebuild number that is appended to AMI version"
   default     = "1"
 }
+
+variable "aws_org_id" {
+  type        = string
+  description = "Organization ID to share AMI with"
+  default     = "1"
+}
