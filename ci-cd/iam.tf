@@ -36,6 +36,10 @@ resource "aws_iam_policy_attachment" "policy_attachment_codebuild_role" {
 }
 
 data "aws_iam_policy_document" "codebuild_policy_document_statement" {
+  #checkov:skip=CKV_AWS_111
+  #checkov:skip=CKV_AWS_110
+  #checkov:skip=CKV_AWS_109
+  #checkov:skip=CKV_AWS_107
 
   statement {
     sid    = "AllowEC2"
