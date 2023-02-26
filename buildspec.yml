@@ -22,5 +22,4 @@ phases:
       - ${PACKER_EXE} validate ${PACKER_TEMPLATE_DIR}
   build:
     commands:
-      - echo "Packer build command ${PACKER_EXE} build -var ami_users=${AMI_USERS} -var build_tag=${NEW_BUILD_TAG} -var instance_profile=${INSTANCE_PROFILE} -var subnet_id=${SUBNET_ID} ${PACKER_TEMPLATE_DIR}"
       - ${PACKER_EXE} build -var build_tag_number=${CODEBUILD_BUILD_NUMBER} ${PACKER_TEMPLATE_DIR}
