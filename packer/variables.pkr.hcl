@@ -31,5 +31,5 @@ variable "build_tag_number" {
 variable "aws_org_id" {
   type        = string
   description = "Organization ID to share AMI with"
-  default     = "1"
+  default     = ["1"]
 }
