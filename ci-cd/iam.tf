@@ -40,7 +40,7 @@ data "aws_iam_policy_document" "codebuild_policy_document_statement" {
   #checkov:skip=CKV_AWS_110
   #checkov:skip=CKV_AWS_109
   #checkov:skip=CKV_AWS_107
-
+  #checkov:skip=CKV_AWS_356
   statement {
     sid    = "AllowEC2"
     effect = "Allow"

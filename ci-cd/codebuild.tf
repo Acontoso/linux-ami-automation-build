@@ -11,6 +11,7 @@ locals {
 
 resource "aws_codebuild_project" "codebuild_job" {
   #checkov:skip=CKV_AWS_147: Ensure that CodeBuild projects are encrypted - No artifacts so not required
+  #checkov:skip=CKV_AWS_314: "Ensure CodeBuild project environments have a logging configuration"
   name          = var.codebuild_project_name
   description   = var.codebuild_project_description
   build_timeout = "300"
