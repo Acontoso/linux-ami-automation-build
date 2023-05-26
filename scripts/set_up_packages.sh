@@ -45,11 +45,9 @@ else
 fi
 
 apt-get update && apt-get upgrade -y
-
 apt-get install -y python3 python3-pip python-is-python3
-pip install -U pip
 
-# Install anything else required
+# Install anything else required!
 apt-get install -y -f \
 	auditd \
 	chrony \
@@ -61,26 +59,17 @@ apt-get install -y -f \
 	tree \
 	unzip \
   libplist-utils \
-  apt-transport-https
+  apt-transport-https \
+  ca-certificates
 
 echo "y" | pip3 install ansible
 
-#Install AWS cli
-if [[ "${CPU_ARCH}" == "x86_64" ]]; then
-  curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-  unzip -q awscliv2.zip
-  ./aws/install -b /usr/local/bin
-  wait
-  rm -rf aws
-  rm -rf awscliv2.zip
-elif [[ "${CPU_ARCH}" == "aarch64" ]]; then
-  curl "https://awscli.amazonaws.com/awscli-exe-linux-aarch64.zip" -o "awscliv2.zip"
-  unzip -q awscliv2.zip
-  ./aws/install -b /usr/local/bin
-  wait
-  rm -rf aws
-  rm -rf awscliv2.zip
-else
-  echo "CPU architecture not supported"
-  exit 1
-fi
+#Install AZ cli
+curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
+#Install Kubectl
+curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+#Install AWS CLI
+curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+unzip awscliv2.zip
+./aws/install

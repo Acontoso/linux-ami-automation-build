@@ -8,7 +8,7 @@ get_cs__jwt_token () {
     TOKEN=$(curl -X POST "https://api.crowdstrike.com/oauth2/token" \
     -H "accept: application/json" \
     -H "Content-Type: application/x-www-form-urlencoded" \
-    -d "client_id=${CROWDSTRIKE_CLIENT_ID}&client_secret=${CROWDSTRIKE_API_KEY}" | jq -r .access_token)
+    -d "client_id=${CROWDSTRIKE_CLIENT_ID}&client_secret=${CROWDSTRIKE_CLIENT_SECRET}" | jq -r .access_token)
 }
 
 get_latest_sensor_hash () {
@@ -16,15 +16,15 @@ get_latest_sensor_hash () {
     -H "Accept: application/json" \
     -H "Authorization: Bearer ${TOKEN}" \
     -H "Content-Type: application/json")
-    INSTALL_HASH=$(echo ${response} | jq -r '.resources[0].sha256')
+    INSTALL_HASH=$(echo ${response} | jq -r '[.resources[] | select(.os_version == "16/18/20/22")][0].sha256')
 }
 
 install_crowdstrike_sensor () {
     curl -X GET "https://api.crowdstrike.com/sensors/entities/download-installer/v1?id=${INSTALL_HASH}" \
     -H "Authorization: Bearer ${TOKEN}" \
     -o ubuntu-falcon-sensor.deb
-    apt install -y ./ubuntu-falcon-sensor.deb 
-    /opt/CrowdStrike/falconctl -d -f --aid && /opt/CrowdStrike/falconctl -s --cid=4E30B757D8104150B222E6DF80F8E2C0-48
+    apt-get install -f -y ./ubuntu-falcon-sensor.deb 
+    /opt/CrowdStrike/falconctl -s --cid=4E30B757D8104150B222E6DF80F8E2C0-48 && /opt/CrowdStrike/falconctl -d -f --aid
     systemctl start falcon-sensor
     rm ubuntu-falcon-sensor.deb
 }
