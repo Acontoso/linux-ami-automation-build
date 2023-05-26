@@ -5,7 +5,7 @@ locals {
 
 source "amazon-ebs" "ubuntu_20_04" {
   ami_name               = "${var.ami_name}-${var.build_tag_number}"
-  ami_org_arns           = var.aws_org_id
+  #ami_org_arns           = var.aws_org_id
   region                 = var.region
   skip_region_validation = true
   source_ami_filter {
