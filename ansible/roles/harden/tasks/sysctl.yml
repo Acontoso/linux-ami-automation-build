@@ -103,6 +103,14 @@
     sysctl_set: yes
     ignoreerrors: yes
 
+- name: 1.5.3 Ensure address space layout randomization (ASLR) is enabled
+  sysctl:
+    name: kernel.randomize_va_space
+    value: 2
+    state: present
+    sysctl_set: yes
+    ignoreerrors: yes
+
 - name: 3.2.6 Ensure bogus ICMP responses are ignored
   sysctl:
     name: net.ipv4.icmp_ignore_bogus_error_responses
@@ -155,3 +163,17 @@
     - sctp
     - rds
     - tipc
+
+- name: 1.6.1 Ensure core dumps are restricted sysctl
+  sysctl:
+    name: fs.suid_dumpable
+    value: 0
+    state: present
+    sysctl_set: yes
+    ignoreerrors: yes
+
+- name: 1.6.1 Ensure core dumps are restricted
+  lineinfile:
+    state: present
+    path: /etc/security/limits.conf
+    line: * hard core 0

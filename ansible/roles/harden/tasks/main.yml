@@ -1,7 +1,7 @@
 ---
-- name: "[Networking] Activities Include"
+- name: "[System Functions] Activities Include"
   include_tasks:
-    file: network.yml
+    file: sysctl.yml
 
 - name: "[Audit and Logging] Activities Include"
   include_tasks:
@@ -14,3 +14,7 @@
 - name: "[FileSystem Configuration] Activities Include"
   include_tasks:
     file: file_system.yml
+
+- name: "[SSH Configuration] Activities Include"
+  include_tasks:
+    file: ssh.yml

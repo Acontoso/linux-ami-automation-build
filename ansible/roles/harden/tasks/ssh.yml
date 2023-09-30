@@ -1,0 +1,195 @@
+---
+- name: 5.2.1 Ensure permissions on /etc/ssh/sshd_config are configured
+  command: chown root:root /etc/ssh/sshd_config && chmod og-rwx /etc/ssh/sshd_config
+
+- name: 5.2.2 Ensure permissions on SSH private host key files are configured
+  command: find /etc/ssh -xdev -type f -name 'ssh_host_*_key' -exec chmod u-x,g-wx,o-rwx {} \; && find /etc/ssh -xdev -type f -name 'ssh_host_*_key' -exec chown root:ssh_keys {} \;
+
+- name: 5.2.3 Ensure permissions on SSH public host key files are configured
+  command: find /etc/ssh -xdev -type f -name 'ssh_host_*_key.pub' -exec chmod u-x,go-wx {} \; && find /etc/ssh -xdev -type f -name 'ssh_host_*_key.pub' -exec chown root:root {} \;
+
+- name: 5.2.2 Ensure SSH Protocol is set to 2
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: "^Protocol "
+    line: "Protocol 2"
+  notify: reload sshd
+
+- name: 5.2.3 Ensure SSH LogLevel is set to INFO
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: "^LogLevel "
+    line: "LogLevel INFO"
+  notify: reload sshd
+
+- name: 5.2.4 Ensure SSH X11 forwarding is disabled
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: "^X11Forwarding "
+    line: "X11Forwarding no"
+  notify: reload sshd
+
+- name: 5.2.5 Ensure SSH MaxAuthTries is set to 4 or less
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: "^MaxAuthTries "
+    line: "MaxAuthTries 4"
+  notify: reload sshd
+
+- name: 5.2.6 Ensure SSH IgnoreRhosts is enabled - disable host/rhost based authentication
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: "^IgnoreRhosts "
+    line: "IgnoreRhosts yes"
+  notify: reload sshd
+
+- name: 5.2.7 Ensure SSH HostbasedAuthentication is disabled
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: "^HostbasedAuthentication "
+    line: "HostbasedAuthentication no"
+  notify: reload sshd
+
+- name: 5.2.8 Ensure SSH root login is disabled
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: "^PermitRootLogin "
+    line: "PermitRootLogin no"
+  notify: reload sshd
+
+- name: 5.2.9 Ensure SSH PermitEmptyPasswords is disabled
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: "^PermitEmptyPasswords "
+    line: "PermitEmptyPasswords no"
+  notify: reload sshd
+
+- name: 5.2.10 Ensure SSH PermitUserEnvironment is disabled
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: "^PermitUserEnvironment "
+    line: "PermitUserEnvironment no"
+  notify: reload sshd
+
+- name: 5.2.12 Ensure SSH Idle Timeout Interval is configured
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: "^ClientAliveInterval "
+    line: "ClientAliveInterval 300"
+  notify: reload sshd
+
+- name: Ensure only strong Ciphers are used
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: '^Ciphers'
+    line: 'Ciphers chacha20-poly1305@openssh.com,aes256-gcm@openssh.com,aes128-gcm@openssh.com,aes256-ctr,aes192-ctr,aes128-ctr'
+  notify: reload sshd
+
+- name: Ensure only strong MAC are used
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: '^MACs'
+    line: 'MACs hmac-sha2-512-etm@openssh.com,hmac-sha2-256-etm@openssh.com,umac-128-etm@openssh.com,hmac-sha2-512,hmac-sha2-256,umac-128@openssh.com'
+  notify: reload sshd
+
+- name: Ensure only strong Key Exchange Algorithms are used
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: '^KexAlgorithms'
+    line: 'KexAlgorithms curve25519-sha256@libssh.org,diffie-hellman-group-exchange-sha256'
+  notify: reload sshd
+
+- name: Ensure SSH LoginGraceTime is set to one minute or less
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: "^LoginGraceTime "
+    line: "LoginGraceTime 60"
+  notify: reload sshd
+
+- name: Ensure SSH AllowTcpForwarding is disabled
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: "^AllowTcpForwarding "
+    line: "AllowTcpForwarding no"
+  notify: reload sshd
+
+- name: Ensure SSH MaxStartups is configured
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: "^maxstartups"
+    line: "maxstartups .10:30:60"
+  notify: reload sshd
+
+- name: Ensure SSH MaxSessions is limited
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: "^MaxSessions"
+    line: "MaxSessions 10"
+  notify: reload sshd
+
+- name: 5.2.14 Ensure SSH access is limited
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: "^AllowGroups "
+    line: "AllowGroups {{ ssh_allow_groups }}"
+  when: ssh_allow_groups is defined
+  notify: reload sshd
+
+- name: 5.2.14 Ensure SSH access is limited
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: "^AllowUsers "
+    line: "AllowUsers {{ ssh_allow_users }}"
+  when: ssh_allow_users is defined
+  notify: reload sshd
+
+- name: 5.2.14 Ensure SSH access is limited
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: "^DenyGroups "
+    line: "DenyGroups {{ ssh_deny_groups }}"
+  when: ssh_deny_groups is defined
+  notify: reload sshd
+
+- name: 5.2.14 Ensure SSH access is limited
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: "^DenyUsers "
+    line: "DenyUsers {{ ssh_deny_users }}"
+  when: ssh_deny_users is defined
+  notify: reload sshd
+
+- name: 5.2.15 Ensure SSH warning banner is configured
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: "^Banner "
+    line: "Banner /etc/issue.net"
+  notify: reload sshd
+
+- name: Ensure authentication method public key explicitly enabled
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: "^#?AuthenticationMethods"
+    line: "AuthenticationMethods publickey"
+  notify: reload sshd
+
+- name: Disable password based authentication method
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: "^#?PasswordAuthentication"
+    line: "PasswordAuthentication no"
+  notify: reload sshd
+
+- name: Disable challenge/response authentication method
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: "^#?ChallengeResponseAuthentication"
+    line: "ChallengeResponseAuthentication no"
+  notify: reload sshd
+
+- name: Enable public key authentication method
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: "^#?PubkeyAuthentication"
+    line: "PubkeyAuthentication yes"
+  notify: reload sshd
