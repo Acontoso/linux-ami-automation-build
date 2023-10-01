@@ -5,11 +5,18 @@
     path: /etc/sudoers
     line: Defaults syslog=local2
 
-- name: 1.3.3 Ensure sudo log file exists
+- name: Ensure sudo log file exists
   lineinfile:
     state: present
     path: /etc/sudoers
     line: Defaults logfile="/var/log/sudo.log"
+
+- name: Ensure journald is configured to write logfiles to persistent disk
+  lineinfile:
+    state: present
+    dest: /etc/systemd/journald.conf
+    regexp: '^Storage'
+    line: Storage=persistent
 
 - name: Enable service ssm_service_script
   systemd:

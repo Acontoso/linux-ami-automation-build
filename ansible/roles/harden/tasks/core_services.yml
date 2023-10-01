@@ -6,12 +6,26 @@
     regexp: "^APT::Periodic::Unattended-Upgrade "
     line: 'APT::Periodic::Unattended-Upgrade "0";'
 
-- name: Ensure minimum days between password changes is 7 or more 5.4.1.2
+- name: Ensure minimum days between password changes is 7 or more
   lineinfile:
     regexp: '^PASS_MIN_DAYS'
     state: present
     path: /etc/login.defs
     line: PASS_MIN_DAYS 30
+
+- name: Ensure password hashing algorithm is SHA-512
+  lineinfile:
+    regexp: '^ENCRYPT_METHOD'
+    state: present
+    path: /etc/login.defs
+    line: ENCRYPT_METHOD sha512
+
+- name: Ensure password expiration warning days is 7 or more
+  lineinfile:
+    regexp: '^PASS_WARN_AGE'
+    state: present
+    path: /etc/login.defs
+    line: PASS_WARN_AGE 7
 
 - name: Ensure password expiration is 365 days or less
   lineinfile:
@@ -30,14 +44,17 @@
     path: /etc/login.defs
     line: UMASK 027
 
-- name: Ensure default user umask is 027 or more restrictive 5.4.4 Add file in /etc/profile.d
-  lineinfile:
-    create: yes
-    state: absent
-    path: /etc/profile.d/umask.sh
-    line: UMASK 027
+- name: Ensure ownership on cron are configured
+  command: chown root:root /etc/'{{ item }}' 
+  loop:
+    - crontab
+    - cron.hourly
+    - cron.daily
+    - cron.weekly
+    - cron.monthly
+    - cron.d
 
-- name: 5.1.x Ensure permissions on cron are configured
+- name: Ensure permissions on cron are configured
   command: chmod og-rwx /etc/'{{ item }}' 
   loop:
     - crontab

@@ -18,3 +18,7 @@
 - name: "[SSH Configuration] Activities Include"
   include_tasks:
     file: ssh.yml
+
+- name: "[Package Configuration] Activities Include"
+  include_tasks:
+    file: packages.yml

@@ -1,0 +1,38 @@
+---
+- name: "Uninstall unused packages"
+  ansible.builtin.package:
+    name: '{{ item }}'
+    state: absent
+  loop:
+    - avahi-autoipd
+    - avahi
+    - cups
+    - dhcp
+    - openldap2
+    - nfs-utils
+    - nfs-kernel-server
+    - dhcp
+    - openldap2
+    - nfs-utils
+    - nfs-kernel-server
+    - bind
+    - vsftpd
+    - dovecot
+    - samba
+    - squid
+    - net-snmp
+    - rsync
+    - ypserv
+    - telnet-server
+    - ypbind
+    - rsh
+    - talk
+    - telnet
+    - openldap2-clients
+
+- name: "Install packages"
+  ansible.builtin.package:
+    name: '{{ item }}'
+    state: present
+  loop:
+    - rsyslog

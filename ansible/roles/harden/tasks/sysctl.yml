@@ -1,5 +1,5 @@
 ---
-- name: 3.1.1 Ensure IP forwarding is disabled
+- name: Ensure IP forwarding is disabled
   sysctl:
     name: net.ipv4.ip_forward
     value: 0
@@ -7,7 +7,7 @@
     sysctl_set: yes
     ignoreerrors: yes
 
-- name: 3.1.1 Ensure IP forwarding is disabled (flush existing routes)
+- name: Ensure IP forwarding is disabled (flush existing routes)
   sysctl:
     name: net.ipv4.route.flush
     value: 1
@@ -15,7 +15,7 @@
     sysctl_set: yes
     ignoreerrors: yes
 
-- name: 3.1.2 Ensure packet redirect sending is disabled (all)
+- name: Ensure packet redirect sending is disabled (all)
   sysctl:
     name: net.ipv4.conf.all.send_redirects
     value: 0
@@ -23,7 +23,7 @@
     sysctl_set: yes
     ignoreerrors: yes
 
-- name: 3.1.2 Ensure packet redirect sending is disabled (default)
+- name: Ensure packet redirect sending is disabled (default)
   sysctl:
     name: net.ipv4.conf.default.send_redirects
     value: 0
@@ -31,7 +31,7 @@
     sysctl_set: yes
     ignoreerrors: yes
 
-- name: 3.2.1 Ensure source routed packets are not accepted
+- name: Ensure source routed packets are not accepted
   sysctl:
     name: net.ipv4.conf.all.accept_source_route
     value: 0
@@ -39,7 +39,7 @@
     sysctl_set: yes
     ignoreerrors: yes
 
-- name: 3.1.2 Ensure packet redirect sending is disabled (all)
+- name: Ensure packet redirect sending is disabled (all)
   sysctl:
     name: net.ipv4.conf.default.accept_source_route
     value: 0
@@ -47,7 +47,7 @@
     sysctl_set: yes
     ignoreerrors: yes
 
-- name: 3.2.2 Ensure ICMP redirects are not accepted
+- name: Ensure ICMP redirects are not accepted
   sysctl:
     name: net.ipv4.conf.default.accept_redirects
     value: 0
@@ -55,7 +55,7 @@
     sysctl_set: yes
     ignoreerrors: yes
 
-- name: 3.2.2 Ensure ICMP redirects are not accepted (all)
+- name: Ensure ICMP redirects are not accepted (all)
   sysctl:
     name: net.ipv4.conf.all.accept_redirects
     value: 0
@@ -63,7 +63,7 @@
     sysctl_set: yes
     ignoreerrors: yes
 
-- name: 3.2.3 Ensure secure ICMP redirects are not accepted
+- name: Ensure secure ICMP redirects are not accepted
   sysctl:
     name: net.ipv4.conf.default.secure_redirects
     value: 0
@@ -71,7 +71,7 @@
     sysctl_set: yes
     ignoreerrors: yes
 
-- name: 3.2.3 Ensure secure ICMP redirects are not accepted (all)
+- name: Ensure secure ICMP redirects are not accepted (all)
   sysctl:
     name: net.ipv4.conf.all.secure_redirects
     value: 0
@@ -79,7 +79,7 @@
     sysctl_set: yes
     ignoreerrors: yes
 
-- name: 3.2.4 Ensure suspicious packets are logged
+- name: Ensure suspicious packets are logged
   sysctl:
     name: net.ipv4.conf.default.log_martians
     value: 1
@@ -87,7 +87,7 @@
     sysctl_set: yes
     ignoreerrors: yes
 
-- name: 3.2.4 Ensure suspicious packets are logged (all)
+- name: Ensure suspicious packets are logged (all)
   sysctl:
     name: net.ipv4.conf.all.log_martians
     value: 1
@@ -95,7 +95,7 @@
     sysctl_set: yes
     ignoreerrors: yes
 
-- name: 3.2.5 Ensure broadcast ICMP requests are ignored
+- name: Ensure broadcast ICMP requests are ignored
   sysctl:
     name: net.ipv4.icmp_echo_ignore_broadcasts
     value: 1
@@ -103,7 +103,7 @@
     sysctl_set: yes
     ignoreerrors: yes
 
-- name: 1.5.3 Ensure address space layout randomization (ASLR) is enabled
+- name: Ensure address space layout randomization (ASLR) is enabled
   sysctl:
     name: kernel.randomize_va_space
     value: 2
@@ -111,7 +111,7 @@
     sysctl_set: yes
     ignoreerrors: yes
 
-- name: 3.2.6 Ensure bogus ICMP responses are ignored
+- name: Ensure bogus ICMP responses are ignored
   sysctl:
     name: net.ipv4.icmp_ignore_bogus_error_responses
     value: 1
@@ -119,7 +119,23 @@
     sysctl_set: yes
     ignoreerrors: yes
 
-- name: 3.3.1 Ensure IPv6 router advertisements are not accepted
+- name: Disable IPv6
+  sysctl:
+    name: net.ipv6.conf.default.disable_ipv6
+    value: 1
+    state: present
+    sysctl_set: yes
+    ignoreerrors: yes
+
+- name: Disable IPv6 (all)
+  sysctl:
+    name: net.ipv6.conf.default.disable_ipv6
+    value: 1
+    state: present
+    sysctl_set: yes
+    ignoreerrors: yes
+
+- name: Ensure IPv6 router advertisements are not accepted
   sysctl:
     name: net.ipv6.conf.default.accept_ra
     value: 0
@@ -127,7 +143,7 @@
     sysctl_set: yes
     ignoreerrors: yes
 
-- name: 3.3.1 Ensure IPv6 router advertisements are not accepted (all)
+- name: Ensure IPv6 router advertisements are not accepted (all)
   sysctl:
     name: net.ipv6.conf.all.accept_ra
     value: 0
@@ -135,7 +151,7 @@
     sysctl_set: yes
     ignoreerrors: yes
 
-- name: 3.3.2 Ensure IPv6 redirects are not accepted
+- name: Ensure IPv6 redirects are not accepted
   sysctl:
     name: net.ipv6.conf.default.accept_redirects
     value: 0
@@ -143,7 +159,7 @@
     sysctl_set: yes
     ignoreerrors: yes
 
-- name: 3.3.2 Ensure IPv6 redirects are not accepted (all)
+- name: Ensure IPv6 redirects are not accepted (all)
   sysctl:
     name: net.ipv6.conf.all.accept_redirects
     value: 0
@@ -151,8 +167,31 @@
     sysctl_set: yes
     ignoreerrors: yes
 
-- name: 3.5.1 Ensure DCCP is disabled Debian
-  when: ansible_os_family == "Debian"
+- name: Ensure Reverse Path Filtering is enabled
+  sysctl:
+    name: net.ipv4.conf.default.rp_filter
+    value: 1
+    state: present
+    sysctl_set: yes
+    ignoreerrors: yes
+
+- name: Ensure Reverse Path Filtering is enabled (all)
+  sysctl:
+    name: net.ipv4.conf.all.rp_filter
+    value: 1
+    state: present
+    sysctl_set: yes
+    ignoreerrors: yes
+
+- name: Ensure TCP SYN Cookies is enabled
+  sysctl:
+    name: net.ipv4.tcp_syncookies
+    value: 1
+    state: present
+    sysctl_set: yes
+    ignoreerrors: yes
+
+- name: Ensure DCCP is disabled Debian
   lineinfile:
     create: yes
     path: /etc/modprobe.d/{{ item }}.conf
@@ -164,7 +203,7 @@
     - rds
     - tipc
 
-- name: 1.6.1 Ensure core dumps are restricted sysctl
+- name: Ensure core dumps are restricted sysctl
   sysctl:
     name: fs.suid_dumpable
     value: 0
@@ -172,7 +211,7 @@
     sysctl_set: yes
     ignoreerrors: yes
 
-- name: 1.6.1 Ensure core dumps are restricted
+- name: Ensure core dumps are restricted
   lineinfile:
     state: present
     path: /etc/security/limits.conf
