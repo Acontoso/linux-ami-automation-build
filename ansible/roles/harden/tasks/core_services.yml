@@ -34,10 +34,10 @@
     path: /etc/login.defs
     line: PASS_MAX_DAYS 364
 
-- name: 5.4.1.4 Verify all users with a password have password inactive no more than 30 days after password expires
+- name: Verify all users with a password have password inactive no more than 30 days after password expires
   command: useradd -D -f 30
 
-- name: 5.4.4 Ensure default user umask is 027 or more restrictive
+- name: Ensure default user umask is 027 or more restrictive
   lineinfile:
     regexp: '^UMASK'
     state: present
@@ -64,8 +64,7 @@
     - cron.monthly
     - cron.d
 
-- name: 2.2.16 Ensure rsync service is not enabled
-  when: ansible_os_family == "Debian"
+- name: Ensure rsync service is not enabled
   systemd:
     name: rsync
     state: stopped
@@ -83,7 +82,7 @@
     patterns: "*.repo"
   register: repos
 
-- name: 1.2.3 Ensure gpgcheck is globally activated child zypp package manager config files
+- name: Ensure gpgcheck is globally activated child zypp package manager config files
   lineinfile:
     regexp: ^gpgcheck
     state: present

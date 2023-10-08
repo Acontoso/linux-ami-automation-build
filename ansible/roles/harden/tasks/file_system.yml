@@ -1,12 +1,12 @@
-- name: 1.1.7 Ensure noexec option set on /dev/shm partition - stop executing binaries or executable code in shared memory
+- name: Ensure noexec option set on /dev/shm partition - stop executing binaries or executable code in shared memory
   lineinfile:
     regexp: \s/dev/shm\s
     state: present
     path: /etc/fstab
-    line: tmpfs /tmp tmpfs defaults,rw,nosuid,nodev,noexec,relatime 0 0
+    line: tmpfs /dev/shm tmpfs defaults,noexec,nodev,nosuid,size=2G 0 0
 
-- name: 1.1.16 Ensure noexec option set on /dev/shm partition
-  command:  mount -o remount,noexec,nodev,nosuid /dev/shm
+- name: Ensure /dev/shm is configured remount
+  command: mount -o remount,noexec,nodev,nosuid /dev/shm
 
 - name: Remove unneeded filesystem types
   lineinfile:
@@ -24,7 +24,7 @@
     - udf
     - FAT
 
-- name: 1.1.1.3 Remove unneeded filesystem types modprobe
+- name: Remove unneeded filesystem types modprobe
   command: modprobe -r {{ item }}
   loop:
     - cramfs
@@ -36,27 +36,27 @@
     - udf
     - FAT
 
-- name: 1.4.1 Ensure permissions on bootloader config are configured Ubuntu
+- name: Ensure permissions on bootloader config are configured Ubuntu
   command: chmod og-rwx /etc/default/grub
 
-- name: 5.3.3 Ensure password reuse is limited
+- name: Ensure password reuse is limited
   lineinfile:
     state: present
     path: /etc/pam.d/common-password
     line: password required pam_pwhistory.so remember=5
 
-- name: 1.1.2 Ensure /tmp is configured
+- name: Ensure /tmp is configured
   lineinfile:
     regexp: ^tmpfs\s\/tmp
     state: present
     path: /etc/fstab
     line: tmpfs /tmp tmpfs defaults,rw,nosuid,nodev,noexec,relatime 0 0
 
-- name: 1.1.2 Ensure /tmp is configured remount
+- name: Ensure /tmp is configured remount
   command: mount -o remount,noexec,nodev,nosuid /tmp
 
-- name: 1.1.18 Ensure nodev option set on /home partition
+- name: Ensure nodev option set on /home partition
   command: mount -o remount,nodev /home
 
-- name: 1.5.2 Ensure permissions on bootloader config are configured
+- name: Ensure permissions on bootloader config are configured
   command: chmod og-rwx /voot/grub2/grub.cfg
