@@ -1,3 +1,4 @@
+---
 - name: Ensure noexec option set on /dev/shm partition - stop executing binaries or executable code in shared memory
   lineinfile:
     regexp: \s/dev/shm\s
