@@ -1,12 +1,14 @@
 ---
+- name: Ensure ownership on /etc/ssh/sshd_config are configured ownership
+  ansible.builtin.file:
+    path: /etc/ssh/sshd_config
+    mode: og-rwx
+
 - name: Ensure permissions on /etc/ssh/sshd_config are configured
-  command: chown root:root /etc/ssh/sshd_config && chmod og-rwx /etc/ssh/sshd_config
-
-- name: Ensure permissions on SSH private host key files are configured
-  command: find /etc/ssh -xdev -type f -name 'ssh_host_*_key' -exec chmod u-x,g-wx,o-rwx {} \; && find /etc/ssh -xdev -type f -name 'ssh_host_*_key' -exec chown root:ssh_keys {} \;
-
-- name: Ensure permissions on SSH public host key files are configured
-  command: find /etc/ssh -xdev -type f -name 'ssh_host_*_key.pub' -exec chmod u-x,go-wx {} \; && find /etc/ssh -xdev -type f -name 'ssh_host_*_key.pub' -exec chown root:root {} \;
+  ansible.builtin.file:
+    path: /etc/ssh/sshd_config
+    owner: root
+    group: root
 
 - name: Ensure SSH Protocol is set to 2
   lineinfile:
@@ -117,7 +119,7 @@
   lineinfile:
     dest: /etc/ssh/sshd_config
     regexp: "^maxstartups"
-    line: "maxstartups .10:30:60"
+    line: "maxstartups 10:30:60"
   notify: reload sshd
 
 - name: Ensure SSH MaxSessions is limited

@@ -45,7 +45,10 @@
     line: UMASK 027
 
 - name: Ensure ownership on cron are configured
-  command: chown root:root /etc/'{{ item }}' 
+  ansible.builtin.file:
+    path: /etc{{ item }}
+    owner: root
+    group: root
   loop:
     - crontab
     - cron.hourly
@@ -73,12 +76,12 @@
   lineinfile:
     regexp: ^gpgcheck
     state: present
-    path: /etc.zypp/zypp.conf
+    path: /etc/zypp/zypp.conf
     line: gpgcheck=1
 
 - name: Find all of the files inside this directory - zypp package manager config files
   find:
-    paths: "/etc/yum.repos.d/"
+    paths: "/etc/zypp/repos.d/"
     patterns: "*.repo"
   register: repos
 
@@ -86,6 +89,6 @@
   lineinfile:
     regexp: ^gpgcheck
     state: present
-    path: /etc.zypp/zypp.conf
+    path: {{item.path}}
     line: gpgcheck=1
   with_items: "{{ repos.files }}"

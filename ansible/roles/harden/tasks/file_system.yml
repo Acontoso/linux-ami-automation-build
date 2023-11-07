@@ -1,10 +1,26 @@
----
 - name: Ensure noexec option set on /dev/shm partition - stop executing binaries or executable code in shared memory
   lineinfile:
     regexp: \s/dev/shm\s
     state: present
     path: /etc/fstab
     line: tmpfs /dev/shm tmpfs defaults,noexec,nodev,nosuid,size=2G 0 0
+
+# #ansible-galaxy collection install ansible.posix
+# - name: Ensure /dev/shm is configured remount
+#   ansible.posix.mount:
+#     path: /dev/shm
+#     state: remounted
+#     opts: noexec,nodev,nosuid
+
+# - name: unmount /dev/shm
+#   ansible.posix.mount:
+#     path: /dev/shm
+#     state: unmounted
+
+# - name: Remount /dev/shm
+#   ansible.posix.mount:
+#     path: /dev/shm
+#     state: mounted
 
 - name: Ensure /dev/shm is configured remount
   command: mount -o remount,noexec,nodev,nosuid /dev/shm
@@ -38,7 +54,9 @@
     - FAT
 
 - name: Ensure permissions on bootloader config are configured Ubuntu
-  command: chmod og-rwx /etc/default/grub
+  ansible.builtin.file:
+    path: /etc/default/grub
+    mode: og-rwx
 
 - name: Ensure password reuse is limited
   lineinfile:
@@ -60,4 +78,6 @@
   command: mount -o remount,nodev /home
 
 - name: Ensure permissions on bootloader config are configured
-  command: chmod og-rwx /voot/grub2/grub.cfg
+  ansible.builtin.file:
+    path: /boot/grub2/grub.cfg
+    mode: og-rwx
