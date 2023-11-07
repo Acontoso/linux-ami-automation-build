@@ -46,7 +46,7 @@
 
 - name: Ensure ownership on cron are configured
   ansible.builtin.file:
-    path: /etc{{ item }}
+    path: /etc/{{ item }}
     owner: root
     group: root
   loop:
@@ -58,7 +58,9 @@
     - cron.d
 
 - name: Ensure permissions on cron are configured
-  command: chmod og-rwx /etc/'{{ item }}' 
+  ansible.builtin.file:
+    path: /etc/{{ item }}
+    mode: og-rwx
   loop:
     - crontab
     - cron.hourly
@@ -72,7 +74,6 @@
     name: rsync
     state: stopped
 
-#non ubuntu systems
 # - name: 1.2.3 Ensure gpgcheck is globally activated
 #   lineinfile:
 #     regexp: ^gpgcheck
