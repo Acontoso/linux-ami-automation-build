@@ -44,3 +44,7 @@ variable "cost_centre" {
   type        = string
   description = "Cost centre to be applied to created resources"
 }
+
+variable "source_code_repo_url" {
+  type        = string
+}
