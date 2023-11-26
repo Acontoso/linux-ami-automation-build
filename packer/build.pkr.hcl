@@ -160,7 +160,7 @@ build {
   #defining this script to be ran first
   provisioner "powershell" {
     scripts = [
-      "scripts/windows-server/generic_tool_install.ps1",
+      "scripts/windows/generic_tool_install.ps1",
     ]
   }
 
