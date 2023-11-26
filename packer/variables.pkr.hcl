@@ -26,7 +26,7 @@ variable "build_tag_number" {
 }
 
 variable "aws_org_id" {
-  type        = string
+  type        = list(string)
   description = "AWS organisation ID"
 }
 
