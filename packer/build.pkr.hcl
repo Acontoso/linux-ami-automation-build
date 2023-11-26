@@ -34,7 +34,6 @@ source "amazon-ebs" "ubuntu_20_04" {
   temporary_security_group_source_cidrs = var.codebuild_cidr_block
   deprecate_at                          = local.deprecate_time
   iam_instance_profile                  = var.iam_instance_profile
-  encrypt_boot                          = true
   run_volume_tags                       = local.tags
   tags                                  = local.tags
   imds_support                          = "v2.0"
@@ -60,7 +59,6 @@ source "amazon-ebs" "ubuntu_22_04" {
   temporary_security_group_source_cidrs = var.codebuild_cidr_block
   deprecate_at                          = local.deprecate_time
   iam_instance_profile                  = var.iam_instance_profile
-  encrypt_boot                          = true
   run_volume_tags                       = local.tags
   tags                                  = local.tags
   imds_support                          = "v2.0"
@@ -150,7 +148,6 @@ source "amazon-ebs" "win_2022" {
   temporary_security_group_source_cidrs = var.codebuild_cidr_block
   deprecate_at                          = local.deprecate_time
   iam_instance_profile                  = var.iam_instance_profile
-  encrypt_boot                          = true
   run_volume_tags                       = local.tags
   tags                                  = local.tags
   imds_support                          = "v2.0"
