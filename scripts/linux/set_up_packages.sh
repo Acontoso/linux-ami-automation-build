@@ -47,7 +47,7 @@ fi
 apt-get update && apt-get upgrade -y
 apt-get install -y python3 python3-pip python-is-python3
 
-# Install anything else required!
+# Install anything else required! - Could also do this with ansible too!
 apt-get install -y -f \
 	auditd \
 	chrony \
@@ -64,11 +64,6 @@ apt-get install -y -f \
 
 echo "y" | pip3 install ansible
 
-#Install AZ cli
-curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
-#Install Kubectl
-curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
-install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 #Install AWS CLI
 curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
 unzip awscliv2.zip

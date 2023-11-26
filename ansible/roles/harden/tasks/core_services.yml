@@ -74,23 +74,26 @@
     name: rsync
     state: stopped
 
-# - name: 1.2.3 Ensure gpgcheck is globally activated
-#   lineinfile:
-#     regexp: ^gpgcheck
-#     state: present
-#     path: /etc/zypp/zypp.conf
-#     line: gpgcheck=1
+- name: 1.2.3 Ensure gpgcheck is globally activated
+  when: ansible_os_family == "RedHat"
+  lineinfile:
+    regexp: ^gpgcheck
+    state: present
+    path: /etc/zypp/zypp.conf
+    line: gpgcheck=1
 
-# - name: Find all of the files inside this directory - zypp package manager config files
-#   find:
-#     paths: "/etc/zypp/repos.d/"
-#     patterns: "*.repo"
-#   register: repos
+- name: Find all of the files inside this directory - zypp package manager config files
+  when: ansible_os_family == "RedHat"
+  find:
+    paths: "/etc/zypp/repos.d/"
+    patterns: "*.repo"
+  register: repos
 
-# - name: Ensure gpgcheck is globally activated child zypp package manager config files
-#   lineinfile:
-#     regexp: ^gpgcheck
-#     state: present
-#     path: {{item.path}}
-#     line: gpgcheck=1
-#   with_items: "{{ repos.files }}"
+- name: Ensure gpgcheck is globally activated child zypp package manager config files
+  when: ansible_os_family == "RedHat"
+  lineinfile:
+    regexp: ^gpgcheck
+    state: present
+    path: {{item.path}}
+    line: gpgcheck=1
+  with_items: "{{ repos.files }}"

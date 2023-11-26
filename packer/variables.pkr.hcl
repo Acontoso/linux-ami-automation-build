@@ -1,7 +1,6 @@
-variable "ami_name" {
+variable "ami_prefix" {
   type        = string
   description = "Name of AMI used to be built"
-  default     = "contoso-ubuntu-ami"
 }
 
 variable "region" {
@@ -13,17 +12,35 @@ variable "region" {
 variable "subnet_id" {
   type        = string
   description = "Subnet where the AMI will be built in"
-  default     = "subnet-7694e62e"
 }
 
 variable "codebuild_cidr_block" {
   type        = list(string)
   description = "CIDR block used by CodeBuild in order to allow connectivity to EC2 instance building AMI"
-  default     = ["13.55.255.216/29", "3.26.127.24/29"]
 }
 
 variable "build_tag_number" {
   type        = string
   description = "Codebuild number that is appended to AMI version"
   default     = "1"
+}
+
+variable "aws_org_id" {
+  type        = string
+  description = "AWS organisation ID"
+}
+
+variable "iam_instance_profile" {
+  type        = string
+  description = "IAM role to assign to instance while build is being done"
+}
+
+variable "environment" {
+  type        = string
+  description = "Environment the core golden images are being created in"
+}
+
+variable "cost_centre" {
+  type        = string
+  description = "Cost centre to be applied to created resources"
 }
